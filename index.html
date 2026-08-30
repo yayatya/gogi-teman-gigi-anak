@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gigi Ceria — Rumah Karakter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+   <script src="script.js"></script>
+  <script src="audio.js"></script>
+  
+<style>
+  /* Layout Dasar Carousel Rumah */
+  .stage {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  .room-track {
+    display: flex;
+    width: 100%;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Sembunyikan scrollbar Firefox */
+  }
+
+  .room-track::-webkit-scrollbar {
+    display: none; /* Sembunyikan scrollbar Chrome/Safari */
+  }
+
+  .room {
+    flex: 0 0 100%;
+    width: 100%;
+    min-width: 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  .nav-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  .nav-arrow.left { left: 8px; }
+  .nav-arrow.right { right: 8px; }
+
+  .room-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ccc;
+    transition: background 0.3s;
+  }
+  .dot.active {
+    background: #37D6B8;
+  }
+</style>
+</head>
+<body>
+
+<div class="frame">
+  <div class="hud">
+    <div class="hud-pill" id="dayPill">Hari 1</div>
+    <div class="hud-pill" id="periodPill">🌞 Pagi</div>
+    <div class="gigi-meter">
+      <div class="gigi-tooth" id="gigiTooth"></div>
+      <div class="gigi-track"><div class="gigi-fill" id="gigiFill"></div></div>
+    </div>
+    <button class="skip-btn" onclick="skipCurrentStage()" title="Lewati misi ini">⏭</button>
+     <button class="skip-btn" id="muteBtn" onclick="toggleMute()" title="Suara & narasi">🔊</button>
+  </div>
+
+  <div class="stage">
+    <div class="room-track" id="roomTrack">
+
+      <!-- KAMAR TIDUR -->
+      <div class="room" data-room="kamar">
+        <a href="games/index.html" class="game-shortcut" title="Main Mini Game Gigi vs Bakteri!">
+          <span class="icon">🦷 vs 👾</span>
+          <span class="label">Main Game</span>
+        </a>
+        <div class="sky pagi" data-sky></div>
+        <div class="floor"></div>
+        <div class="room-label">🛏️ Kamar Tidur</div>
+        <div class="room-bubble" id="kamarBubble">Belum ngantuk~</div>
+        <div class="room-char" title="Toothless">
+          <svg viewBox="0 0 100 100" width="80" height="80" class="toothless-svg">
+            <path d="M 25 35 Q 10 15 30 25" fill="#2b2d35" />
+            <path d="M 75 35 Q 90 15 70 25" fill="#2b2d35" />
+            <path d="M 20 40 Q 8 30 22 35" fill="#2b2d35" />
+            <path d="M 80 40 Q 92 30 78 35" fill="#2b2d35" />
+            <path d="M 30 75 Q 10 85 20 92 Q 35 88 38 78" fill="#2b2d35" />
+            <ellipse cx="50" cy="68" rx="22" ry="20" fill="#343740" />
+            <ellipse cx="38" cy="82" rx="7" ry="10" fill="#2b2d35" />
+            <ellipse cx="62" cy="82" rx="7" ry="10" fill="#2b2d35" />
+            <ellipse cx="50" cy="42" rx="30" ry="22" fill="#343740" />
+            <ellipse cx="36" cy="38" rx="8" ry="10" fill="#76e041" />
+            <ellipse cx="64" cy="38" rx="8" ry="10" fill="#76e041" />
+            <ellipse cx="37" cy="38" rx="3" ry="7" fill="#15200b" />
+            <ellipse cx="63" cy="38" rx="3" ry="7" fill="#15200b" />
+            <circle cx="34" cy="34" r="2" fill="#ffffff" />
+            <circle cx="60" cy="34" r="2" fill="#ffffff" />
+            <path d="M 38 52 Q 50 62 62 52" fill="#1a1b20" stroke="#2b2d35" stroke-width="1" />
+            <polygon points="41,52 43,55 45,52" fill="#ffffff" />
+            <polygon points="46,52 48,56 50,52" fill="#ffffff" />
+            <polygon points="50,52 52,56 54,52" fill="#ffffff" />
+            <polygon points="55,52 57,55 59,52" fill="#ffffff" />
+          </svg>
+        </div>
+        <div class="obj" id="objBed" onclick="tapBed()">
+          <div class="badge-bang">!</div>
+          <div class="custom-bed">
+            <div class="headboard"></div>
+            <div class="mattress">
+              <div class="pillow-pink"></div>
+              <div class="sheet"></div>
+              <div class="blanket-brown"></div>
+            </div>
+            <div class="bed-legs">
+              <div class="leg left"></div>
+              <div class="leg right"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+ <!-- DAPUR -->
+<div class="room" data-room="dapur">
+  <div class="sky pagi" data-sky></div>
+  <div class="floor"></div>
+  <div class="room-label">🍽️ Dapur</div>
+  <div class="room-bubble" id="dapurBubble">Belum lapar~</div>
+  
+  <!-- KARAKTER DUDUK DI LANTAI/SAMPING MEJA -->
+  <div class="room-char"> 
+    <svg viewBox="0 0 100 100" width="80" height="80" class="toothless-svg">
+      <path d="M 25 35 Q 10 15 30 25" fill="#2b2d35" />
+      <path d="M 75 35 Q 90 15 70 25" fill="#2b2d35" />
+      <path d="M 20 40 Q 8 30 22 35" fill="#2b2d35" />
+      <path d="M 80 40 Q 92 30 78 35" fill="#2b2d35" />
+      <path d="M 30 75 Q 10 85 20 92 Q 35 88 38 78" fill="#2b2d35" />
+      <ellipse cx="50" cy="68" rx="22" ry="20" fill="#343740" />
+      <ellipse cx="38" cy="82" rx="7" ry="10" fill="#2b2d35" />
+      <ellipse cx="62" cy="82" rx="7" ry="10" fill="#2b2d35" />
+      <ellipse cx="50" cy="42" rx="30" ry="22" fill="#343740" />
+      <ellipse cx="36" cy="38" rx="8" ry="10" fill="#76e041" />
+      <ellipse cx="64" cy="38" rx="8" ry="10" fill="#76e041" />
+      <ellipse cx="37" cy="38" rx="3" ry="7" fill="#15200b" />
+      <ellipse cx="63" cy="38" rx="3" ry="7" fill="#15200b" />
+      <circle cx="34" cy="34" r="2" fill="#ffffff" />
+      <circle cx="60" cy="34" r="2" fill="#ffffff" />
+      <path d="M 38 52 Q 50 62 62 52" fill="#1a1b20" stroke="#2b2d35" stroke-width="1" />
+      <polygon points="41,52 43,55 45,52" fill="#ffffff" />
+      <polygon points="46,52 48,56 50,52" fill="#ffffff" />
+      <polygon points="50,52 52,56 54,52" fill="#ffffff" />
+      <polygon points="55,52 57,55 59,52" fill="#ffffff" />
+    </svg>
+  </div>
+
+  <!-- MEJA UTAMA -->
+  <div class="obj" id="objTable">
+    <div class="badge-bang">!</div>
+    <div class="table" id="foodTable"></div>
+  </div>
+</div>
+
+      <!-- KAMAR MANDI -->
+      <div class="room" data-room="mandi">
+        <div class="sky pagi" data-sky></div>
+        <div class="floor"></div>
+        <div class="room-label">🚿 Kamar Mandi</div>
+        <div class="room-bubble" id="mandiBubble">Gigi masih bersih~</div>
+        <div class="room-char"><svg viewBox="0 0 100 100" width="80" height="80" class="toothless-svg">
+            <path d="M 25 35 Q 10 15 30 25" fill="#2b2d35" />
+            <path d="M 75 35 Q 90 15 70 25" fill="#2b2d35" />
+            <path d="M 20 40 Q 8 30 22 35" fill="#2b2d35" />
+            <path d="M 80 40 Q 92 30 78 35" fill="#2b2d35" />
+            <path d="M 30 75 Q 10 85 20 92 Q 35 88 38 78" fill="#2b2d35" />
+            <ellipse cx="50" cy="68" rx="22" ry="20" fill="#343740" />
+            <ellipse cx="38" cy="82" rx="7" ry="10" fill="#2b2d35" />
+            <ellipse cx="62" cy="82" rx="7" ry="10" fill="#2b2d35" />
+            <ellipse cx="50" cy="42" rx="30" ry="22" fill="#343740" />
+            <ellipse cx="36" cy="38" rx="8" ry="10" fill="#76e041" />
+            <ellipse cx="64" cy="38" rx="8" ry="10" fill="#76e041" />
+            <ellipse cx="37" cy="38" rx="3" ry="7" fill="#15200b" />
+            <ellipse cx="63" cy="38" rx="3" ry="7" fill="#15200b" />
+            <circle cx="34" cy="34" r="2" fill="#ffffff" />
+            <circle cx="60" cy="34" r="2" fill="#ffffff" />
+            <path d="M 38 52 Q 50 62 62 52" fill="#1a1b20" stroke="#2b2d35" stroke-width="1" />
+            <polygon points="41,52 43,55 45,52" fill="#ffffff" />
+            <polygon points="46,52 48,56 50,52" fill="#ffffff" />
+            <polygon points="50,52 52,56 54,52" fill="#ffffff" />
+            <polygon points="55,52 57,55 59,52" fill="#ffffff" />
+          </svg></div>
+        <div class="obj" id="objBrush" onclick="tapBrush()">
+          <div class="badge-bang">!</div>
+          <div class="sinkwrap">
+            <div class="mirror"><svg viewBox="0 0 100 100" width="80" height="80" class="toothless-svg">
+            <path d="M 25 35 Q 10 15 30 25" fill="#2b2d35" />
+            <path d="M 75 35 Q 90 15 70 25" fill="#2b2d35" />
+            <path d="M 20 40 Q 8 30 22 35" fill="#2b2d35" />
+            <path d="M 80 40 Q 92 30 78 35" fill="#2b2d35" />
+            <path d="M 30 75 Q 10 85 20 92 Q 35 88 38 78" fill="#2b2d35" />
+            <ellipse cx="50" cy="68" rx="22" ry="20" fill="#343740" />
+            <ellipse cx="38" cy="82" rx="7" ry="10" fill="#2b2d35" />
+            <ellipse cx="62" cy="82" rx="7" ry="10" fill="#2b2d35" />
+            <ellipse cx="50" cy="42" rx="30" ry="22" fill="#343740" />
+            <ellipse cx="36" cy="38" rx="8" ry="10" fill="#76e041" />
+            <ellipse cx="64" cy="38" rx="8" ry="10" fill="#76e041" />
+            <ellipse cx="37" cy="38" rx="3" ry="7" fill="#15200b" />
+            <ellipse cx="63" cy="38" rx="3" ry="7" fill="#15200b" />
+            <circle cx="34" cy="34" r="2" fill="#ffffff" />
+            <circle cx="60" cy="34" r="2" fill="#ffffff" />
+            <path d="M 38 52 Q 50 62 62 52" fill="#1a1b20" stroke="#2b2d35" stroke-width="1" />
+            <polygon points="41,52 43,55 45,52" fill="#ffffff" />
+            <polygon points="46,52 48,56 50,52" fill="#ffffff" />
+            <polygon points="50,52 52,56 54,52" fill="#ffffff" />
+            <polygon points="55,52 57,55 59,52" fill="#ffffff" />
+          </svg></div>
+            <div class="sink"><div class="brushcup">🪥</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+<!-- Tombol Navigasi Panah -->
+<button class="nav-arrow left" onclick="scrollRoom(-1)">‹</button>
+<button class="nav-arrow right" onclick="scrollRoom(1)">›</button>
+
+<!-- Indikator Dots (Sudah Bersih Tanpa Dot Pink) -->
+<div class="room-dots" id="roomDots">
+  <div class="dot active" data-i="0" onclick="goToRoom(0)"></div>
+  <div class="dot" data-i="1" onclick="goToRoom(1)"></div>
+  <div class="dot" data-i="2" onclick="goToRoom(2)"></div>
+</div>
+
+     <!-- MODALS -->
+    <div class="modal-backdrop" id="modalBrush">
+      <div class="modal-card">
+        <h3>Sikat Gigi 🪥</h3>
+        <p class="sub">Gerakkan sikat memutar lembut ke seluruh gigi, 4-5 kali di tiap bagian ✨</p>
+        <div class="progress-track"><div class="progress-fill" id="brushFill"></div></div>
+        <div class="mouth" id="brushMouth"></div>
+        <div class="info-bubble" id="brushInfoCard">
+          <b>Tahukah kamu?</b> Ini namanya <b>teknik Fone's</b> — cara sikat gigi termudah untuk yang baru belajar. Kalau sudah lancar, kamu bisa coba <b>teknik modifikasi Bass</b>: sikat dimiringkan ke arah gusi supaya sisa makanan di sela gigi ikut terangkat.
+        </div>
+        <button class="btn" id="brushDoneBtn" disabled onclick="closeBrush()">Selesai</button>
+      </div>
+    </div>
+
+    <div class="modal-backdrop" id="modalQuiz">
+      <div class="modal-card">
+        <div class="quiz-progress" id="quizProgress">Soal 1 dari 5</div>
+        <h3 id="quizQ" style="font-size:15px;"></h3>
+        <div id="quizOpts"></div>
+        <button class="btn" id="quizNextBtn" style="display:none;" onclick="nextQuizQuestion()">Lanjut</button>
+      </div>
+    </div>
+
+    <div class="modal-backdrop" id="modalDay">
+      <div class="modal-card">
+        <h3 id="dayDoneLabel">Hari 1 Selesai! 🌟</h3>
+        <div style="font-size:48px; margin:6px 0;">😴</div>
+        <div class="stat-row">
+          <div class="stat"><b id="quizScoreLabel">0/5</b><span>Jawaban benar</span></div>
+          <div class="stat"><b id="gigiScoreLabel">80%</b><span>Kondisi gigi</span></div>
+        </div>
+        <button class="btn secondary" onclick="nextDay()">Lanjut ke Hari Berikutnya</button>
+      </div>
+    </div>
+
+    <div class="tip" id="tipScreen">
+      <div class="tip-card">
+        <div class="ico">👆</div>
+        <h3 class="display" style="color:var(--teal-dark, #1c5249); margin:0 0 8px;">Geser untuk jelajah rumah!</h3>
+        <p class="sub" style="color:#4a6b64;">Ketuk benda yang <b>berkedip 🔴</b> untuk menjalankan misi karaktermu. Kamu boleh mengabaikannya lewat tombol ⏭ di atas — tapi gigi karakter bisa jadi rusak kalau misi terus dilewati!</p>
+        <button class="btn" style="margin-top:10px;" onclick="document.getElementById('tipScreen').style.display='none'; initMission();">Mulai Main!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let game = { day:1, gigi:80, stage:'sarapan', missionDone:false };
+const stageRoom = { sarapan:'dapur', sikat_pagi:'mandi', camilan:'dapur', sikat_malam:'mandi', tidur:'kamar' };
+const stageOrder = ['sarapan','sikat_pagi','camilan','sikat_malam','tidur'];
+const roomIndex = { kamar:0, dapur:1, mandi:2 };
+const stagePenalty = { sarapan:-5, sikat_pagi:-20, camilan:-5, sikat_malam:-20, tidur:0 };
+const skipMsg = {
+  sarapan: { id:'dapurBubble', text:'Nggak sarapan? Nanti lemas... 😕' },
+  sikat_pagi: { id:'mandiBubble', text:'Nggak sikat gigi? Gigi jadi kotor & mulai rusak! 😢' },
+  camilan: { id:'dapurBubble', text:'Baik, nggak jajan dulu 🙂' },
+  sikat_malam: { id:'mandiBubble', text:'Tidur tanpa sikat gigi bikin gigi berlubang! 😢' },
+};
+
+const breakfastFoods = [
+  { emoji:'🍞🥚', label:'Roti & Telur', good:true },
+  { emoji:'🍩', label:'Donat Manis', good:false }
+];
+const snackFoods = [
+  { emoji:'🍎🥕', label:'Buah & Sayur', good:true },
+  { emoji:'🍬', label:'Permen', good:false }
+];
+
+const quizBank = [
+  { q:'Gigi sebaiknya disikat berapa kali sehari?', opts:['2 kali','1 kali'], correct:0 },
+  { q:'Kapan waktu paling tepat untuk sikat gigi?', opts:['Setelah sarapan & sebelum tidur','Hanya saat mandi pagi'], correct:0 },
+  { q:'Bagaimana cara menyikat gigi yang benar?', opts:['Gerakan memutar lembut','Digosok sekuat-kuatnya'], correct:0 },
+  { q:'Makanan mana yang paling baik untuk gigi?', opts:['Buah & sayur','Permen & coklat'], correct:0 },
+  { q:'Setelah makan makanan manis, sebaiknya kita...', opts:['Sikat gigi setelahnya','Dibiarkan saja'], correct:0 },
+];
+let quizIndex = 0, quizCorrect = 0;
+
+/* ---------------- Room carousel ---------------- */
+const track = document.getElementById('roomTrack');
+
+function scrollRoom(dir){
+  const w = track.clientWidth;
+  track.scrollBy({ left: dir * w, behavior: 'smooth' });
+}
+
+function scrollToRoom(name){
+  const w = track.clientWidth;
+  track.scrollTo({ left: roomIndex[name] * w, behavior: 'smooth' });
+}
+
+track.addEventListener('scroll', ()=>{
+  clearTimeout(track._t);
+  track._t = setTimeout(()=>{
+    const idx = Math.round(track.scrollLeft / track.clientWidth);
+    document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active', i===idx));
+  }, 80);
+});
+
+/* ---------------- HUD ---------------- */
+function updateHUD(){
+  document.getElementById('dayPill').textContent = 'Hari ' + game.day;
+  const periodMap = { sarapan:'🌞 Pagi', sikat_pagi:'🌞 Pagi', camilan:'⛅ Siang', sikat_malam:'🌙 Malam', tidur:'🌙 Malam' };
+  document.getElementById('periodPill').textContent = periodMap[game.stage];
+  const skyClass = game.stage==='sarapan'||game.stage==='sikat_pagi' ? 'pagi' : (game.stage==='camilan' ? 'siang' : 'malam');
+  document.querySelectorAll('[data-sky]').forEach(s=>{ s.className='sky '+skyClass; });
+
+  const g = Math.max(0, Math.min(100, game.gigi));
+  document.getElementById('gigiFill').style.width = g + '%';
+  const tooth = document.getElementById('gigiTooth');
+  const fill = document.getElementById('gigiFill');
+  if(g >= 70){ tooth.style.background='#ffffff'; fill.style.background='linear-gradient(90deg,var(--teal, #37D6B8),#37D6B8)'; }
+  else if(g >= 40){ tooth.style.background='#F3E3A8'; fill.style.background='linear-gradient(90deg,var(--sun, #F3E3A8),#F3E3A8)'; }
+  else{ tooth.style.background='#C9A46B'; fill.style.background='linear-gradient(90deg,var(--bad, #c9503a),#c9503a)'; }
+}
+function adjustGigi(n){ game.gigi = Math.max(0, Math.min(100, game.gigi+n)); updateHUD(); }
+
+/* ---------------- Mission state ---------------- */
+function initMission(){ applyStage(); scrollToRoom(stageRoom[game.stage]); }
+
+function applyStage(){
+  game.missionDone = false;
+  updateHUD();
+  document.getElementById('objBed').classList.remove('pulse');
+  document.getElementById('objTable').classList.remove('pulse');
+  document.getElementById('objBrush').classList.remove('pulse');
+  document.querySelectorAll('.dot').forEach(d=>d.classList.remove('pending'));
+
+  const targetRoom = stageRoom[game.stage];
+  if(targetRoom==='kamar') document.getElementById('objBed').classList.add('pulse');
+  if(targetRoom==='dapur') document.getElementById('objTable').classList.add('pulse');
+  if(targetRoom==='mandi') document.getElementById('objBrush').classList.add('pulse');
+  document.querySelector('.dot[data-i="'+roomIndex[targetRoom]+'"]').classList.add('pending');
+
+  document.getElementById('kamarBubble').textContent = targetRoom==='kamar' ? 'Waktunya tidur! 🌙' : 'Belum ngantuk~';
+  document.getElementById('dapurBubble').textContent = targetRoom==='dapur' ? (game.stage==='sarapan' ? 'Aku lapar, sarapan yuk! 🍳' : 'Aku mau camilan~ 😋') : 'Belum lapar~';
+  document.getElementById('mandiBubble').textContent = targetRoom==='mandi' ? 'Waktunya sikat gigi! 🪥' : 'Gigi masih bersih~';
+
+  renderFoodTable();
+}
+
+function renderFoodTable(){
+  const table = document.getElementById('foodTable');
+  table.innerHTML = '';
+  const active = (game.stage==='sarapan' || game.stage==='camilan');
+  const foods = game.stage==='camilan' ? snackFoods : breakfastFoods;
+  foods.forEach(f=>{
+    const el = document.createElement('div');
+    el.className = 'food-slot' + (active ? '' : ' dim');
+    el.innerHTML = f.emoji + '<span class="food-label">'+f.label+'</span>';
+    if(active) el.onclick = ()=>chooseFood(f);
+    table.appendChild(el);
+  });
+}
+
+function chooseFood(f){
+  game.missionDone = true;
+  if(!f.good) adjustGigi(-10);
+  const bubble = document.getElementById('dapurBubble');
+  bubble.innerHTML = f.good
+    ? '✅ Enak & sehat untuk gigi!'
+    : '⚠️ Manis begini bisa bikin gigi berlubang kalau tak disikat.';
+  document.getElementById('objTable').classList.remove('pulse');
+  document.querySelector('.dot[data-i="1"]').classList.remove('pending');
+  setTimeout(()=>{ advanceStage(); }, 900);
+}
+
+function tapBrush(){
+  if(stageRoom[game.stage] !== 'mandi') return;
+  openBrush();
+}
+function tapBed(){
+  if(stageRoom[game.stage] !== 'kamar') return;
+  document.getElementById('modalQuiz').classList.add('active');
+  setupQuiz();
+}
+
+/* ---------------- Brushing modal ---------------- */
+function openBrush(){
+  const modal = document.getElementById('modalBrush');
+  modal.classList.add('active');
+  const mouth = document.getElementById('brushMouth');
+  mouth.innerHTML = '';
+  document.getElementById('brushFill').style.width = '0%';
+  const btn = document.getElementById('brushDoneBtn');
+  btn.disabled = true; btn.textContent = 'Selesai';
+
+  const teeth = [];
+  for(let i=0;i<4;i++){
+    const wrap = document.createElement('div'); wrap.className='tooth-wrap';
+    const base = document.createElement('canvas'); base.width=48; base.height=70;
+    const plaque = document.createElement('canvas'); plaque.width=48; plaque.height=70;
+    wrap.appendChild(base); wrap.appendChild(plaque); mouth.appendChild(wrap);
+    drawToothBase(base.getContext('2d'),48,70);
+    drawPlaque(plaque.getContext('2d'),48,70);
+    const t = { wrap, strokes:0, required:11, clean:false };
+    teeth.push(t);
+
+    let brushing=false;
+    const erase=(cx,cy)=>{
+      const rect = plaque.getBoundingClientRect();
+      const x=cx-rect.left, y=cy-rect.top;
+      if(x<-10||y<-10||x>rect.width+10||y>rect.height+10) return;
+      const ctx = plaque.getContext('2d');
+      ctx.save(); ctx.globalCompositeOperation='destination-out';
+      ctx.beginPath(); ctx.arc(x,y,15,0,Math.PI*2); ctx.fill(); ctx.restore();
+      if(!t.clean){
+        t.strokes++;
+        if(t.strokes>=t.required){ t.clean=true; ctx.clearRect(0,0,48,70); wrap.classList.add('done'); spawnSparkle(wrap); }
+        const cleanCount = teeth.filter(x=>x.clean).length;
+        const pct = Math.round((cleanCount/teeth.length)*100);
+        document.getElementById('brushFill').style.width = pct+'%';
+        if(pct>=100){ btn.disabled=false; btn.textContent='Gigi Bersih! Selesai ✓'; }
+      }
+    };
+    const start=(e)=>{brushing=true; move(e); e.preventDefault();};
+    const move=(e)=>{ if(!brushing) return; const pt=e.touches?e.touches[0]:e; erase(pt.clientX,pt.clientY); };
+    const end=()=>{brushing=false;};
+    plaque.addEventListener('mousedown',start);
+    plaque.addEventListener('mousemove',move);
+    window.addEventListener('mouseup',end);
+    plaque.addEventListener('touchstart',start,{passive:false});
+    plaque.addEventListener('touchmove',move,{passive:false});
+    plaque.addEventListener('touchend',end);
+  }
+}
+function drawToothBase(ctx,w,h){ ctx.clearRect(0,0,w,h); ctx.fillStyle='#fff'; toothPath(ctx,w,h); ctx.fill(); ctx.strokeStyle='#EADFC8'; ctx.lineWidth=2; toothPath(ctx,w,h); ctx.stroke(); }
+function toothPath(ctx,w,h){
+  ctx.beginPath();
+  ctx.moveTo(2,h*0.35);
+  ctx.quadraticCurveTo(2,2,w*0.5,2);
+  ctx.quadraticCurveTo(w-2,2,w-2,h*0.35);
+  ctx.quadraticCurveTo(w-2,h*0.8,w*0.72,h-4);
+  ctx.quadraticCurveTo(w*0.5,h*0.7,w*0.28,h-4);
+  ctx.quadraticCurveTo(2,h*0.8,2,h*0.35);
+  ctx.closePath();
+}
+function drawPlaque(ctx,w,h){
+  ctx.clearRect(0,0,w,h); ctx.save(); toothPath(ctx,w,h); ctx.clip();
+  ctx.fillStyle='rgba(178,163,74,0.9)';
+  for(let i=0;i<6;i++){ const bx=Math.random()*w, by=Math.random()*h*0.85+h*0.05, br=8+Math.random()*9;
+    ctx.beginPath(); ctx.arc(bx,by,br,0,Math.PI*2); ctx.fill(); }
+  ctx.restore();
+}
+function spawnSparkle(wrap){ const s=document.createElement('div'); s.className='sparkle'; s.textContent='✨'; s.style.left='10px'; s.style.top='-6px'; wrap.appendChild(s); setTimeout(()=>s.remove(),900); }
+
+function closeBrush(){
+  document.getElementById('modalBrush').classList.remove('active');
+  game.missionDone = true;
+  adjustGigi(15);
+  document.getElementById('objBrush').classList.remove('pulse');
+  document.querySelector('.dot[data-i="2"]').classList.remove('pending');
+  advanceStage();
+}
+
+/* ---------------- Lewati misi ---------------- */
+function skipCurrentStage(){
+  const anyModalOpen = document.querySelector('.modal-backdrop.active');
+  if(anyModalOpen) return;
+
+  if(game.stage === 'tidur'){
+    document.getElementById('quizScoreLabel').textContent = '0/5 (kuis dilewati)';
+    document.getElementById('gigiScoreLabel').textContent = Math.round(game.gigi)+'%';
+    document.getElementById('dayDoneLabel').textContent = 'Hari '+game.day+' Selesai! 🌟';
+    document.getElementById('modalDay').classList.add('active');
+    return;
+  }
+
+  const wasSkipped = !game.missionDone;
+  if(wasSkipped){
+    const penalty = stagePenalty[game.stage];
+    if(penalty) adjustGigi(penalty);
+    const msg = skipMsg[game.stage];
+    if(msg) document.getElementById(msg.id).textContent = msg.text;
+  }
+  setTimeout(()=>{ advanceStage(); }, wasSkipped ? 800 : 0);
+}
+
+/* ---------------- Stage progression ---------------- */
+function advanceStage(){
+  const i = stageOrder.indexOf(game.stage);
+  if(i < stageOrder.length-1){
+    game.stage = stageOrder[i+1];
+    applyStage();
+    scrollToRoom(stageRoom[game.stage]);
+  }
+}
+
+/* ---------------- Quiz ---------------- */
+function setupQuiz(){ quizIndex=0; quizCorrect=0; renderQuiz(); }
+function renderQuiz(){
+  const item = quizBank[quizIndex];
+  document.getElementById('quizProgress').textContent = 'Soal '+(quizIndex+1)+' dari '+quizBank.length;
+  document.getElementById('quizQ').textContent = item.q;
+  const wrap = document.getElementById('quizOpts'); wrap.innerHTML='';
+  document.getElementById('quizNextBtn').style.display='none';
+  item.opts.forEach((opt,i)=>{
+    const b = document.createElement('button'); b.className='quiz-opt'; b.textContent=opt;
+    b.onclick = ()=>{
+      wrap.querySelectorAll('.quiz-opt').forEach(o=>o.disabled=true);
+      if(i===item.correct){ b.classList.add('correct'); b.textContent+='  ✓'; quizCorrect++; }
+      else{ b.classList.add('wrong'); b.textContent+='  ✗'; wrap.children[item.correct].classList.add('correct'); }
+      document.getElementById('quizNextBtn').style.display='block';
+      document.getElementById('quizNextBtn').textContent = (quizIndex<quizBank.length-1) ? 'Soal Berikutnya' : 'Lihat Ringkasan';
+    };
+    wrap.appendChild(b);
+  });
+}
+function nextQuizQuestion(){
+  quizIndex++;
+  if(quizIndex>=quizBank.length){
+    document.getElementById('modalQuiz').classList.remove('active');
+    document.getElementById('quizScoreLabel').textContent = quizCorrect+'/'+quizBank.length;
+    document.getElementById('gigiScoreLabel').textContent = Math.round(game.gigi)+'%';
+    document.getElementById('dayDoneLabel').textContent = 'Hari '+game.day+' Selesai! 🌟';
+    document.getElementById('modalDay').classList.add('active');
+  } else { renderQuiz(); }
+}
+
+/* ---------------- Day loop ---------------- */
+function nextDay(){
+  document.getElementById('modalDay').classList.remove('active');
+  game.day++;
+  game.stage = 'sarapan';
+  document.getElementById('objBed').classList.remove('pulse');
+  applyStage();
+  scrollToRoom('dapur');
+}
+
+
+updateHUD();
+</script>
+</body>
+</html>

@@ -1,0 +1,506 @@
+:root{
+    --bg:#F2E9DA; --teal:#8FA88F; --teal-dark:#3E4F3E;
+    --coral:#F2A6C6; --coral-dark:#D97DA8;
+    --sun:#F5DB6E; --sun-dark:#C9A93A;
+    --bad:#E8654B; --ink:#1A1A1A;
+    --tile-a:#F2E9DA; --tile-b:#B8DCE0;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;height:100%;}
+body{font-family:'Quicksand',sans-serif; color:var(--ink); background:linear-gradient(160deg,#B8DCE0,#CFE7EA);
+    display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px 10px;}
+h1,h2,.display{font-family:'Baloo 2',sans-serif;}
+
+.frame{width:400px; max-width:100%; height:800px; max-height:92vh; background:#fff; border-radius:36px; overflow:hidden;
+    position:relative; display:flex; flex-direction:column;
+    box-shadow:0 30px 60px -20px rgba(14,93,82,.35), 0 0 0 10px #fff, 0 0 0 12px #B8DCE0;}
+
+/* Mengatur posisi parent ruang agar posisi absolut shortcut pas */
+.room {
+    position: relative;
+}
+/* Pastikan tombol panah slide selalu berada di lapisan paling atas */
+.nav-btn, .room-btn, .arrow-btn { 
+    position: absolute;
+    z-index: 100 !important; /* Angka tinggi agar tidak tertutup objek apapun */
+    cursor: pointer;
+}
+
+/* Kotak Pintasan Game Kanan Atas Kamar */
+.game-shortcut {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 3px solid #62d2b7;
+    border-radius: 18px;
+    padding: 8px 12px;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.game-shortcut .icon {
+    font-size: 24px;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+.game-shortcut .label {
+    font-family: 'Baloo 2', cursive;
+    font-size: 11px;
+    font-weight: 700;
+    color: #1a5e55;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Efek Hover & Klik */
+.game-shortcut:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+    background-color: #f0fdf9;
+}
+
+.game-shortcut:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* Container Utama Tempat Tidur */
+.custom-bed {
+    position: relative;
+    width: 130px;
+    height: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Headboard Kayu di Belakang */
+.custom-bed .headboard {
+    width: 110px;
+    height: 60px;
+    background: linear-gradient(to bottom, #d2a172, #b88358);
+    border-radius: 12px 12px 0 0;
+    box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.15);
+    z-index: 1;
+}
+
+/* Kasur Utama */
+.custom-bed .mattress {
+    position: relative;
+    width: 120px;
+    height: 85px;
+    background: #fdfaf7;
+    border-radius: 16px;
+    margin-top: -30px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    z-index: 2;
+}
+
+/* Bantal Pink */
+.custom-bed .pillow-pink {
+    width: 80px;
+    height: 32px;
+    background: linear-gradient(to bottom, #fba1be, #f47ca0);
+    border-radius: 10px;
+    margin-top: 8px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Sprei Putih/Krem */
+.custom-bed .sheet {
+    width: 100%;
+    height: 12px;
+    background: #f5ebe1;
+    margin-top: 2px;
+}
+
+/* Selimut Cokelat Warm dengan Lipatan */
+.custom-bed .blanket-brown {
+    width: 100%;
+    height: 48px;
+    background: linear-gradient(to bottom, #e3c4a8, #cd9f79);
+    border-radius: 12px 12px 14px 14px;
+    margin-top: -4px;
+    box-shadow: inset 0 4px 6px rgba(255, 255, 255, 0.4), 0 -2px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* Kaki Tempat Tidur */
+.custom-bed .bed-legs {
+    width: 105px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: -4px;
+    z-index: 1;
+}
+
+.custom-bed .leg {
+    width: 12px;
+    height: 14px;
+    background: #a36f45;
+    border-radius: 0 0 4px 4px;
+}
+
+/* Mengatur posisi tempat tidur ke agak kanan tengah */
+#objBed {
+    position: absolute;
+    bottom: 80px;      /* Jarak dari batas bawah lantai */
+    right: 18%;        /* Geser ke kanan (makin kecil persentasenya, makin ke kanan) */
+    transform: none;   /* Menghapus centering otomatis jika ada */
+    z-index: 2;
+}
+
+.room-char {
+    position: absolute;
+    bottom: 75px;      /* Posisi tinggi di lantai */
+    left: 20%;         /* Di sebelah kiri tempat tidur */
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2)); /* Efek bayangan halus */
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+/* Animasi melompat kecil saat Toothless diklik/di-hover */
+.room-char:hover {
+    transform: translateY(-5px) scale(1.05);
+}
+
+.toothless-svg {
+    display: block;
+}
+
+/* Mengatur posisi bubble teks agar melayang bebas di tengah atas kucing */
+#kamarBubble, .room-bubble {
+    position: absolute;
+    top: 42%;             /* Posisi tinggi bubble di tengah area kamar */
+    left: 50%;            /* Tepat di tengah secara horizontal */
+    transform: translateX(-50%); /* Menjaga agar posisi benar-benar presisi di tengah */
+    z-index: 10;          /* Memastikan bubble selalu berada di atas objek lain */
+    margin: 0;            /* Menghapus margin luar yang bikin geser/turun */
+    pointer-events: none; /* Supaya klik tidak terhalang oleh bubble */
+}
+
+/* ---- HUD ---- */
+.hud{display:flex; align-items:center; justify-content:space-between; gap:8px; padding:12px 14px; background:var(--bg);
+    border-bottom:2px dashed #DDD0BC; flex-shrink:0; z-index:30; position:relative;}
+.hud-pill{background:#fff; border-radius:999px; padding:6px 12px; font-weight:800; font-size:12px; color:var(--teal-dark);
+    box-shadow:0 2px 0 rgba(14,93,82,.08); white-space:nowrap;}
+.gigi-meter{flex:1; display:flex; align-items:center; gap:8px;}
+.gigi-tooth{width:26px; height:30px; flex-shrink:0; border-radius:40% 40% 45% 45%/55% 55% 45% 45%; transition:background .4s; background:#fff; box-shadow:inset 0 0 0 2px #e7e0cc;}
+.gigi-track{flex:1; height:12px; background:#DCEFEA; border-radius:999px; overflow:hidden;}
+.gigi-fill{height:100%; width:80%; background:linear-gradient(90deg,var(--teal),#37D6B8); transition:width .4s, background .4s;}
+.skip-btn{flex-shrink:0; width:32px; height:32px; border-radius:50%; background:#fff; border:none; box-shadow:0 2px 0 rgba(14,93,82,.08);
+    font-size:14px; color:var(--teal-dark); cursor:pointer; display:flex; align-items:center; justify-content:center;}
+.skip-btn:active{transform:translateY(2px);}
+
+/* ---- Stage / room carousel (SUDAH DIPERBAIKI) ---- */
+.stage {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    min-width: 0;
+}
+
+.room-track {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    min-width: 0;
+}
+
+.room-track::-webkit-scrollbar {
+    display: none;
+}
+
+.room {
+    flex: 0 0 100%;
+    width: 100%;
+    min-width: 100%;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.sky{position:absolute; top:0; left:0; right:0; height:55%; transition:background 1s;}
+.sky.pagi{background:linear-gradient(180deg,#F5DB6E,#F2E9DA);}
+.sky.siang{background:linear-gradient(180deg,#B8DCE0,#F2E9DA);}
+.sky.malam{background:linear-gradient(180deg,#3E4F3E,#8FA88F);}
+.floor{position:absolute; left:0; right:0; bottom:0; height:45%;
+    background-image:linear-gradient(45deg, var(--tile-b) 25%, transparent 25%),linear-gradient(-45deg, var(--tile-b) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--tile-b) 75%),linear-gradient(-45deg, transparent 75%, var(--tile-b) 75%);
+    background-size:44px 44px; background-color:var(--tile-a); background-position:0 0,0 22px,22px -22px,-22px 0px; opacity:.5;}
+
+.room-label{position:absolute; top:14px; left:14px; z-index:5; background:rgba(255,255,255,.85); font-family:'Baloo 2';
+    font-size:13px; color:var(--teal-dark); padding:5px 12px; border-radius:999px;}
+
+.room-char{font-size:56px; margin-bottom:8px; z-index:4; animation:bob 2.6s ease-in-out infinite; filter:drop-shadow(0 6px 4px rgba(0,0,0,.15));}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
+.room-bubble{background:#fff; border-radius:14px; padding:8px 14px; font-weight:700; font-size:12px; box-shadow:0 3px 0 #DDD0BC;
+    margin-bottom:8px; z-index:4; max-width:220px; text-align:center;}
+
+/* interactive object base */
+.obj{position:relative; z-index:3; margin-bottom:14px; cursor:pointer;}
+.obj.pulse{animation:pulseGlow 1.2s ease-in-out infinite;}
+@keyframes pulseGlow{0%,100%{transform:scale(1);}50%{transform:scale(1.07);}}
+.obj .badge-bang{position:absolute; top:-14px; right:-10px; width:24px; height:24px; background:var(--coral); color:#fff;
+    border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; border:3px solid #fff;
+    display:none;}
+.obj.pulse .badge-bang{display:flex; animation:bounce .8s ease-in-out infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+
+/* --- Kamar Tidur --- */
+.bed{width:200px; height:110px; background:#fff; border-radius:18px 18px 30px 30px; box-shadow:0 6px 0 #DDD0BC; position:relative; display:flex; align-items:center; justify-content:center;}
+.bed::before{content:''; position:absolute; top:-18px; left:10px; width:70px; height:40px; background:var(--coral); border-radius:14px;}
+.bed .tooth-pillow{position:absolute; top:-30px; left:24px; font-size:30px;}
+.bed .blanket{position:absolute; bottom:0; left:0; right:0; height:60%; background:var(--teal); border-radius:0 0 30px 30px;}
+
+/* --- Dapur --- */
+.room-char, 
+.badge-bang {
+  pointer-events: none !important;
+}
+.table {
+  width: 220px;
+  height: 80px;
+  background: #B9926B;
+  border-radius: 14px;
+  box-shadow: 0 6px 0 #96714E;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 10px;
+  padding: 0 14px;
+  position: relative;
+  z-index: 3;
+  margin-bottom: 90px; /* Nilai dinaikkan agar meja terangkat ke atas lantai */
+}
+.food-slot{width:70px; height:70px; background:#fff; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:32px;
+    box-shadow:0 3px 0 #DDD0BC; position:relative; transition:transform .15s;}
+.food-slot:active{transform:scale(.93);}
+.food-slot.dim{opacity:.4; filter:grayscale(1); cursor:default;}
+.food-label{position:absolute; bottom:-20px; left:0; right:0; text-align:center; font-size:10px; font-weight:800; color:var(--teal-dark);}
+
+/* --- Kamar mandi --- */
+.sinkwrap {
+  display: flex; 
+  flex-direction: column; 
+  align-items: center;
+  transform: translateY(-40px); /* Tambahkan ini agar seluruh wastapel & cermin NAIK */
+}
+
+.mirror {
+  width: 110px; 
+  height: 130px; 
+  background: linear-gradient(160deg, #dff5ef, #bfeadf); 
+  border: 8px solid #7c5a3a; 
+  border-radius: 14px;
+  display: flex; 
+  align-items: flex-end; 
+  justify-content: center; 
+  font-size: 44px; 
+  margin-bottom: -6px;
+}
+
+.sink {
+  width: 150px; 
+  height: 60px; 
+  background: #fff; 
+  border-radius: 0 0 30px 30px; 
+  box-shadow: 0 5px 0 #B8DCE0; 
+  position: relative;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+}
+
+.brushcup {
+  width: 56px; 
+  height: 56px; 
+  background: #fff; 
+  border-radius: 12px; 
+  box-shadow: 0 3px 0 #DDD0BC; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  font-size: 26px;
+}
+
+/* ---- nav arrows + dots ---- */
+.nav-arrow{position:absolute; top:50%; transform:translateY(-50%); width:42px; height:42px; border-radius:50%;
+    background:rgba(255,255,255,.85); display:flex; align-items:center; justify-content:center; font-size:20px; color:var(--teal-dark);
+    box-shadow:0 3px 0 rgba(0,0,0,.12); z-index:20; border:none; cursor:pointer;}
+.nav-arrow.left{left:10px;} .nav-arrow.right{right:10px;}
+.room-dots{position:absolute; bottom:12px; left:50%; transform:translateX(-50%); display:flex; gap:8px; z-index:20;}
+.dot{width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,.55); position:relative;}
+.dot.active{background:#fff;}
+.dot .mini-badge{position:absolute; top:-6px; right:-6px; width:8px; height:8px; background:var(--coral); border-radius:50%; display:none;}
+.dot.pending .mini-badge{display:block;}
+
+/* ---- Modal ---- */
+.modal-backdrop{position:absolute; inset:0; background:rgba(10,40,35,.55); display:none; align-items:center; justify-content:center; z-index:50; padding:20px;}
+.modal-backdrop.active{display:flex;}
+.modal-card{background:#fff; border-radius:24px; padding:22px 20px; width:100%; max-width:320px; text-align:center; box-shadow:0 20px 40px rgba(0,0,0,.25);}
+.modal-card h3{font-family:'Baloo 2'; font-size:18px; color:var(--teal-dark); margin:0 0 6px;}
+.modal-card p.sub{font-size:13px; color:#4a6b64; margin:0 0 14px;}
+
+.btn{font-family:'Baloo 2'; font-weight:800; font-size:15px; color:#fff; background:var(--coral); border:none; padding:13px 20px;
+    border-radius:16px; cursor:pointer; box-shadow:0 4px 0 var(--coral-dark); width:100%;}
+.btn:active{transform:translateY(3px); box-shadow:0 1px 0 var(--coral-dark);}
+.btn.secondary{background:var(--teal); box-shadow:0 4px 0 var(--teal-dark);}
+.btn:disabled{opacity:.4;}
+
+/* brushing */
+.mouth{background:#e1aec4; border-radius:20px; padding:14px 10px 18px; display:flex; justify-content:center; gap:6px; margin:6px 0 10px;}
+.tooth-wrap{position:relative; width:48px; height:70px;}
+.tooth-wrap:nth-child(odd){margin-top:5px;}
+.tooth-wrap canvas{position:absolute; top:0; left:0; touch-action:none;}
+.tooth-wrap.done::after{content:'✓'; position:absolute; top:-12px; right:-4px; background:var(--teal); color:#fff; font-size:10px; font-weight:800;
+    width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center;}
+.progress-track{width:100%; height:12px; background:#DCEFEA; border-radius:999px; overflow:hidden; margin-bottom:10px;}
+.progress-fill{height:100%; width:0%; background:linear-gradient(90deg,var(--teal),#37D6B8); transition:width .25s;}
+.sparkle{position:absolute; font-size:18px; pointer-events:none; animation:pop .9s ease forwards;}
+@keyframes pop{0%{transform:scale(0) translateY(0); opacity:1;}70%{transform:scale(1.3) translateY(-24px); opacity:1;}100%{transform:scale(.6) translateY(-40px); opacity:0;}}
+
+/* quiz */
+.quiz-progress{font-size:11px; font-weight:800; color:var(--teal-dark); margin-bottom:6px;}
+.quiz-opt{display:block; width:100%; text-align:left; background:var(--bg); border:3px solid transparent; border-radius:14px;
+    padding:12px 14px; font-family:'Quicksand'; font-weight:700; font-size:13px; color:var(--ink); margin-bottom:8px; cursor:pointer;}
+.quiz-opt.correct{background:#DCF7E9; border-color:var(--teal);}
+.quiz-opt.wrong{background:#FDE1DC; border-color:var(--bad);}
+
+.info-bubble{background:#FFF8E6; border:2px solid #FFE1A0; border-radius:14px; padding:10px 12px; font-size:12px; margin-top:8px; text-align:left;}
+.info-bubble.bad{background:#FDEAE6; border-color:#F7C0B4;}
+
+.stat-row{display:flex; gap:10px; justify-content:center; margin:12px 0;}
+.stat{background:var(--bg); border-radius:14px; padding:10px 16px;}
+.stat b{display:block; font-family:'Baloo 2'; font-size:18px; color:var(--teal-dark);}
+.stat span{font-size:10px; color:#5b7a74;}
+
+/* tip */
+.tip{position:absolute; inset:0; background:rgba(10,40,35,.7); z-index:60; display:flex; align-items:center; justify-content:center; padding:30px;}
+.tip-card{background:#fff; border-radius:22px; padding:24px 20px; text-align:center;}
+.tip-card .ico{font-size:40px; margin-bottom:8px;}
+
+/* Atur container indikator titik */
+.room-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0;
+ 
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+/* Ukuran dan warna titik standar */
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #d1d5db; /* Warna abu-abu saat tidak aktif */
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+/* Warna saat ruangan aktif */
+.dot.active {
+  width: 24px; /* Efek memanjang rapi saat aktif */
+  border-radius: 12px;
+  background-color: #37d6b8; /* Warna hijau toska */
+}
+
+/* Mengatur Container Meja */
+#objTable {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Mengatur Karakter Agar Naik Tepat ke Atas Meja */
+#objTable .room-char {
+  position: absolute;
+  top: -50px; /* Jarak karakter terangkat di atas meja */
+  left: 10px; /* Geser posisi karakter di sebelah kiri meja */
+  z-index: 10;
+  margin: 0;
+}
+
+/* Mengatur Teks Label Makanan Agar Berada di Bawah Meja */
+.food-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.food-label {
+  position: absolute;
+  bottom: -25px; /* Menggeser posisi teks keluar dari bawah meja */
+  font-size: 11px;
+  font-weight: bold;
+  white-space: nowrap;
+  color: #4a4a4a;
+}
+/* Mengatur Meja */
+.table {
+  position: relative;
+  overflow: visible !important; /* Agar tulisan di bawah meja tidak terpotong */
+  margin-bottom: 85px; /* Menaikkan meja sedikit dari lantai */
+}
+
+/* Mengatur Elemen Card Makanan di Dalam JS/HTML */
+.food-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Menurunkan Teks ke Luar Meja */
+.food-label, 
+.food-card span {
+  position: absolute;
+  top: 75px; /* Menurunkan teks tepat ke bawah papan meja cokelat */
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: bold;
+  color: #4a4a4a;
+}
+/* Mengatur Karakter Berdiri Pas Di Bawah Bubble & Jauh Dari Meja */
+.room-char {
+  position: absolute;
+  top: 32%;            /* Nilai diperkecil agar karakter makin NAIK ke atas */
+  left: 50%;           /* Pas di tengah-tengah layar */
+  transform: translateX(-50%);
+  z-index: 5;
+}
